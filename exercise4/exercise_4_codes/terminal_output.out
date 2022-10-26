@@ -1,0 +1,19 @@
+Hello World! (Thread 0)
+Hello World! (Thread 1)
+Hello World! (Thread 4)
+Hello World! (Thread 7)
+Hello World! (Thread 11)
+Hello World! (Thread 6)
+Hello World! (Thread 10)
+Hello World! (Thread 5)
+Hello World! (Thread 3)
+Hello World! (Thread 9)
+Hello World! (Thread 2)
+Hello World! (Thread 8)
+The parallel region is executed by thread 0
+The parallel region is executed by thread 1
+The parallel region is executed by thread 3
+The parallel region is executed by thread 2
+  Thread 2 does things differently
+
+ pi with 1000000 steps is 3.141593 in 0.002396 seconds
