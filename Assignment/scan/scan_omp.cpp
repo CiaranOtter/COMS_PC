@@ -21,6 +21,7 @@ int main() {
 void scan(vector<int> *out, vector<int> in) {
     int i =0;
     out->at(0)= in [0];
+    #pragma omp parallel for scan(+: y)
     for ( i =1; i < length; i ++) {
         out->at(i)= in [ i ]+ out->at(i -1);
     }
