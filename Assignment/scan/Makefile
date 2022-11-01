@@ -1,11 +1,8 @@
-all: serial openMP
+all: main
 
-serial: scan.cpp
-	g++ scan.cpp -pedantic -Wall -Werror -o scan 
-
-openMP: scan_omp.cpp
-	g++ scan_omp.cpp -pedantic -Wall -Werror -o scan_omp
+main: scan.cpp scan_omp.cpp scan_mpi.cpp main.cpp
+	mpic++ main.cpp scan.cpp scan_omp.cpp scan_mpi.cpp  -pedantic -Wall -Werror -fopenmp -lpthread -o main
 
 clean:
-	rm -rf scan
+	rm -rf main
 
