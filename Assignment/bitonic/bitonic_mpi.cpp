@@ -17,6 +17,8 @@ void mpi_merge(vector<int> *arr, int beg, int dir, int center) {
         int k = center/2;
         for (int i=beg; i<beg+k; i++) {
             if (dir==(arr->at(i)>arr->at(i + k))) {
+                // cout << "sqwapping: " << arr->at(i) << " at position " << i << endl;
+                // cout << "sqwapping: " << arr->at(i+k) << " at position " << i+k << endl;
                 mpi_SwapItems(arr, i, i+k);
             }
                 
@@ -27,46 +29,36 @@ void mpi_merge(vector<int> *arr, int beg, int dir, int center) {
 }
 
 
-void findPartner() {
-    int rank;
-    int size;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
+// void findPartner() {
+//     int rank;
+//     int size;
+//     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+//     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    int max = log2(size);
-    for (int i = 0; i < max; i++) {
+//     int max = log2(size);
+//     for (int i = 0; i < max; i++) {
 
+//     }
+
+// }
+
+void printList(vector<int> *arr, int length) {
+    for (int i = 0; i < length; i++) {
+        cout << arr->at(i) << " ";
     }
-
+    cout << endl;
 }
 
-void mpi_ParallelBitonic(vector<int> *arr, int beg, int dir, int center, int partner) {
+void mpi_ParallelBitonic(vector<int> *arr, int beg, int dir, int center) {
         
-        if (center >= 1) {
-            int k;
-            int rank;
-            int pe;
-            int localSize;
-            MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-            MPI_Comm_size(MPI_COMM_WORLD, &pe);
-
-            int localLength = center/pe;
-            vector<int> localData(localLength);
-            
-
-            MPI_Scatter(arr->data(), localLength, MPI_INT, localData.data(), localLength, MPI_INT, 0, MPI_COMM_WORLD);
-            if (rank % 2== 0) {
-                mpi_ParallelBitonic(&localData, 0, 1, localLength, rank+1);
-            } else {
-                mpi_ParallelBitonic(&localData, 0, 0, localLength, rank -1);
-            }
-            
-            
-            
-            
-            
-            mpi_merge(&localData, 0, dir, center);
-            printList(arr, 8);
-        }
+        int length = arr->size();
+        int pe;
+        MPI_Comm_size(MPI_COMM_WORLD, &pe);
+        vector<int> localData(length/pe);
+        printList(arr, length);
+        MPI_Scatter(arr->data(), length/pe, MPI_INT, localData.data(), length/pe, MPI_INT, 0, MPI_COMM_WORLD);
+        sequentialBitonic(&localData, 0, 1, length/pe);
+        MPI_Gather(localData.data(), length/pe, MPI_INT, arr->data(), length/pe, MPI_INT, 0, MPI_COMM_WORLD);
+        printList(arr, length);
         
 } 

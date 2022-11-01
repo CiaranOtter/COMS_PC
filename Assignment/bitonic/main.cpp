@@ -17,12 +17,12 @@ void generate_Random(vector<int> *arr, int length) {
     }
 }
 
-void printList(vector<int> *arr, int length) {
-    for (int i = 0; i < length; i++) {
-        cout << arr->at(i) << " ";
-    }
-    cout << endl;
-}
+// void printList(vector<int> *arr, int length) {
+//     for (int i = 0; i < length; i++) {
+//         cout << arr->at(i) << " ";
+//     }
+//     cout << endl;
+// }
 
 bool validateSort(vector<int> *arr) {
     int length = arr->size();
@@ -90,28 +90,28 @@ void TestMPIBitonic(vector<int> set) {
     double deltaTime = std::chrono::duration<double>(end - start).count();
     if (rank == 0) {
         printStats(&set, deltaTime, "MPI Parallel Bitonic");
-        printList(&set, length);
+        // printList(&set, length);
     }
 }
 
 int main(int argc, char** argv) {
 
-    int rank;
+    // int rank;
     MPI_Init(&argc, &argv);  
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    for (int i = 3; i < 4; i++) {
-        srand(time(0));
-        int length = pow(2, i);
+    // MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    // for (int i = 3; i < 4; i++) {
+    //     srand(time(0));
+        int length = pow(2, 4);
         vector<int> set;
         generate_Random(&set, length);
-        if (rank == 0) {
-            printList(&set, length);
-            TestSequentialBitonic(set);
-            TestopenMPBitonic(set);
-        }
+        // if (rank == 0) {
+        //     printList(&set, length);
+        //     TestSequentialBitonic(set);
+        //     TestopenMPBitonic(set);
+        // }
         TestMPIBitonic(set);
-        MPI_Barrier(MPI_COMM_WORLD);
-    }
+    //     MPI_Barrier(MPI_COMM_WORLD);
+    // }
 
     MPI_Finalize();
     
