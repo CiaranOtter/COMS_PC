@@ -11,21 +11,39 @@ void mpi_SwapItems (vector<int> *arr, int a, int b) {
     arr->at(b) = temp;
 }
 
-void mpi_merge(vector<int> *arr, int beg, int dir, int center) {
-    
+void mpi_merge(vector<int> *data, int beg, int dir, int center) {
+
     if (center > 1) {
+        int rank;
+        MPI_Comm_rank(MPI_COMM_WORLD, &rank);
         int k = center/2;
-        for (int i=beg; i<beg+k; i++) {
-            if (dir==(arr->at(i)>arr->at(i + k))) {
-                // cout << "sqwapping: " << arr->at(i) << " at position " << i << endl;
-                // cout << "sqwapping: " << arr->at(i+k) << " at position " << i+k << endl;
-                mpi_SwapItems(arr, i, i+k);
+        for ( int i = beg; i < beg+k; i++) {
+            if (rank == i) {
+                int length = data->size();
+                vector<int> importData(length);
+                MPI_Recv(importData.data(), length, MPI_INT, i+k, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                for (int a = 0; a < length; a++) {
+                    if (data->at(a) > importData[a]){
+                        int temp = importData[a];
+                        importData[a] = data->at(a);
+                        data->at(a) = temp;
+                    }
+                }
+
+                MPI_Send(importData.data(), length, MPI_INT, i+k, 0, MPI_COMM_WORLD);
             }
-                
+
+            if (rank == i+k) {
+                int length = data->size();
+                MPI_Send(data->data(), length, MPI_INT, i, 0, MPI_COMM_WORLD);
+                MPI_Recv(data->data(), length, MPI_INT, i+k, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            }
         }
-        mpi_merge(arr, beg, dir, k);
-        mpi_merge(arr, beg+k, dir, k);
-    }
+
+        mpi_merge(data, beg, dir, k);
+        mpi_merge(data, beg+k, dir, k);
+    }  
+    
 }
 
 
@@ -41,6 +59,16 @@ void mpi_merge(vector<int> *arr, int beg, int dir, int center) {
 //     }
 
 // }
+
+void swapNodes(vector<int> *data, int beg, int dir, int center) {
+    if (center < 1) {
+        int k = center / 2;
+        swapNodes(data, beg, 1, k);
+        swapNodes(data, beg+k, 0, k);
+
+        mpi_merge(data, beg, dir, center);
+    }
+} 
 
 void printList(vector<int> *arr, int length) {
     for (int i = 0; i < length; i++) {

@@ -65,15 +65,15 @@ void TestSequentialBitonic(vector<int> set) {
     printStats(&set, deltaTime, "Sequential Bitonic");
 }
 
-void TestopenMPBitonic(vector<int> set) {
-    int length = set.size();
-    auto start = Clock::now();
-    omp_ParallelBitonic(&set, 0, 1, length);
-    auto end = Clock::now();
+// void TestopenMPBitonic(vector<int> set) {
+//     int length = set.size();
+//     auto start = Clock::now();
+//     omp_ParallelBitonic(&set, 0, 1, length);
+//     auto end = Clock::now();
 
-    double deltaTime = std::chrono::duration<double>(end - start).count();
-    printStats(&set, deltaTime, "OpenMP Parallel Bitonic");
-}
+//     double deltaTime = std::chrono::duration<double>(end - start).count();
+//     printStats(&set, deltaTime, "OpenMP Parallel Bitonic");
+// }
 
 void TestMPIBitonic(vector<int> set) {
     int length = set.size();
