@@ -3,11 +3,7 @@
 #include <vector>
 #include <random>
 
-
-
 using namespace std;
-
-
 
 void generate_Random(vector<int> *arr, int length) {
     for (int i =0; i < length; i++) {
@@ -23,6 +19,8 @@ void printList(vector<int> *arr, int length) {
 }
 
 int main() {
+
+    srand(time(0));
     int length = 8;
     vector<int> set;
     generate_Random(&set, length);
