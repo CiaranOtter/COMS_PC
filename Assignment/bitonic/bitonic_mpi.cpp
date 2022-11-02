@@ -142,7 +142,7 @@ void swapNodes(vector<int> *data, int beg, int dir, double center, int tag)
         // cout << 
         
         
-
+       
          
         if (k > 0) {
             if (k != 1 || (k == 1 && beg%2 == 0)) {
@@ -150,11 +150,20 @@ void swapNodes(vector<int> *data, int beg, int dir, double center, int tag)
             }
         }
         
-        if (prev > 0) {
-            swapNodes(data, beg, 0, beg-prev, tag);
+        mpi_merge(data, beg,  dir, center, tag);
+
+         if (prev > 0) {
+            if (k != 1 || (k == 1 && beg%2 == 0)) {
+                swapNodes(data, beg, 0, beg-prev, tag);
+            }
         }
         
-        mpi_merge(data, beg,  dir, center, tag);
+        
+        // if (prev > 0) {
+        //     swapNodes(data, beg, 0, beg-prev, tag);
+        // }
+        
+        
         
             
         
@@ -193,7 +202,7 @@ void mpi_ParallelBitonic(vector<int> *arr, int beg, int dir, int center)
     // printList(&localData, localLength);
     sequentialBitonic(&localData, 0, 1, localLength);
     if (rank == 3) {
-        swapNodes(&localData, rank, 0, (pe/2)+rank, 0);
+        swapNodes(&localData, rank, 1, (pe/2)+(rank), 0);
     }
 
     // if (rank == 4) {
