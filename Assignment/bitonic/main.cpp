@@ -81,7 +81,7 @@ void TestMPIBitonic(vector<int> set) {
     int rank;
     MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Bcast(set.data(), length, MPI_INT, 0, MPI_COMM_WORLD);
+    
 
     auto start = Clock::now();
     mpi_ParallelBitonic(&set, 0, 1, length);
@@ -96,14 +96,18 @@ void TestMPIBitonic(vector<int> set) {
 
 int main(int argc, char** argv) {
 
-    // int rank;
+    int rank;
     MPI_Init(&argc, &argv);  
-    // MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    // for (int i = 3; i < 4; i++) {
-    //     srand(time(0));
-        int length = pow(2, 4);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    // for (int i = 3; i < 24; i++) {
+        // srand(time(0));
+        int length = pow(2, 3);
         vector<int> set;
-        generate_Random(&set, length);
+        if (rank == 0) {
+            generate_Random(&set, length);
+            
+        }
+        // MPI_Bcast(set.data(), length, MPI_INT, 0, MPI_COMM_WORLD);
         // if (rank == 0) {
         //     printList(&set, length);
         //     TestSequentialBitonic(set);
